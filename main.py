@@ -1,4 +1,50 @@
 import random
+import json
+import csv
+
+def save_game(data, magicnovell):
+    with open(magicnovell, 'w') as file:
+        json.dump(data, file)
+
+def load_game(magicnovell):
+    with open(magicnovell, 'r') as file:
+        return json.load(file)
+
+def delete_save(magicnovell):
+    import os
+    if os.path.exists(magicnovell):
+        os.remove(magicnovell)
+    else:
+        print("Сохранение не найдено.")
+
+def save_to_csv(data, filename):
+    with open(filename, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+game_data = {
+    'Настюха': 'geroin1',
+    'Настроение': 100,
+    'Андрюха': 'geroin2',
+    'Самочувствие': 100,
+    'Мэджик': 'geroin3',
+    'Праздник на душе': 1000
+}
+
+# Сохранение игры в JSON файл
+save_game(game_data, "C:/Новая папочка/save.json")
+
+# Загрузка сохраненной игры из JSON файла
+loaded_game_data = load_game("C:/Новая папочка/save.json")
+print(loaded_game_data)
+
+# Удаление сохранения
+delete_save('save.json')
+
+# Запись данных в CSV файл
+csv_data = ['geroin1,', 100,
+            'geroin2,', 100,
+            'geroin3,', 100]
+save_to_csv(csv_data, 'games.csv')
 
 def events_Nastyha():
     chouse = random.randint(0,1)
@@ -13,10 +59,10 @@ def event():
         case 0:
             print("Вы отлично накидались")
         case 1:
-            print("Даже с приподнятым настроением вы оказались dead-inside-ом")
+            print("На этой замечтальной ноте, вы впали в пьяный угар и отрубились")
 
 
-gerio_items = {
+geroy_items = {
     "Настюха":["Телефон", "АШКУДЭ","несколько купюр с Хабаровском"],
     "Андрюха":["Телефон","Пачка Chapman", "Наушники", "Колонка"],
     "Мэджик": ["Телефон", "Немного кэша", "Наушники", "Грамм шишек"]  # словарь на месте \\ Листы так же тут
@@ -26,13 +72,13 @@ def Nastyha_check():
           "Вы встретились с друзьями\n"
           "Вы идете на лавочку поднимать себе настроение\n"
           )
-    print(f'У вас есть предметы {gerio_items["Настюха"]}')
+    print(f'У вас есть предметы {geroy_items["Настюха"]}')
     while True:
         command = input("Перед тобой стоит выбор: 1.Остановиться и не пить или 2.Живем один раз, КУТИМ!!!\n")
         match command:
             case "1":
                 print("Вы одумались и пошли домой\n"
-                      "и на следующий день у Вас не болит головушка, нет сушняка и вообще всё замечатльно")
+                      "Вы не выполнили задачу, гаме овер")
                 return
             case "2":
                 print("Вы откинули сомнения \"Живём один раз\" подумали вы")
@@ -66,14 +112,14 @@ def Nastyha_check():
                                         while True:
                                             command = input(
                                                 f'Выберите действие 1.Навалить лютого пара или 2.Просто сидеть\n'
-                                                f'У вас есть предметы {gerio_items["Настюха"]}')
+                                                f'У вас есть предметы {geroy_items["Настюха"]}')
                                             match command:
                                                 case "1":
-                                                    gerio_items["Настюха"].remove("АШКУДЭ")
+                                                    geroy_items["Настюха"].remove("АШКУДЭ")
                                                     print(
                                                         "Ты делаешь лютейшие бархатные тяги и сидишь кайфуешь\n")
                                                     events_Nastyha()
-                                                    print(f'У тебя в инвентаре осталось {gerio_items["Настюха"]}')
+                                                    print(f'У тебя в инвентаре осталось {geroy_items["Настюха"]}')
 
 
                                                     return
@@ -139,7 +185,7 @@ def Andryha_check():
                   "Ваш друг спрашивает, есть ли у Вас колонка\n ")
             while True:
                 command = input(f'Перед вами выбор 1.Сказать, что колонки нет или  2.Навалить музла с колонки\n'
-                                f'Пока что  у вас в инвенторе {gerio_items["Андрюха"]}\n')
+                                f'Пока что  у вас в инвенторе {geroy_items["Андрюха"]}\n')
                 match command:
                     case "1":
                         print("Вы сидите пьете, но вам не так весело, как могло быть с музыкой\n"
@@ -164,7 +210,7 @@ def Andryha_check():
                                     event()
                                     return
                                 case "2":
-                                    print("Вы решили не включать его трек, а включили трек Анны Асти \"царица\" \n"
+                                    print("Вы решили не включать его трек, а включили трек Анны Асти \"Царица\" \n"
                                           "Вашему другу это не понравилось и он выгнал Вас из своего дома")
                                     return
                                 case _:
@@ -191,7 +237,7 @@ def Magic_check():
                    "--------------------------------------------\n"
                    "Пообщавшись с Леди в более интересной обстановке, Я возвращаюсь к друзьям\n"
                    "По возвращению Я допил последнюю бутылку своего любимого напитка\n"
-                   "И через полчаса, Я в приподнятом настроении пошел домой\n"
+                   "И через полчаса Я в приподнятом настроении пошел домой\n"
                 )
 
     return
@@ -200,15 +246,17 @@ game_over = True
 print("Новеллка \"Лютый движняк и тусяк!!\"\n"
       "Ваша задача классно провести время, и не загреметь в мусарку\n"
       )
-gerois = ["Настюха", "Андрюха", "Мэджик"]# список на месте
+geroy = ["Настюха", "Андрюха", "Мэджик"]# список на месте
 
-print(f"Вам на выбор даётся 3 алкаша \n"
-      f"1.{gerois[0]},2.{gerois[1]},3.{gerois[2]}")
+print(f"Вам на выбор даётся 3 алкаша: \n"
+      f"1.{geroy[0]}\n"
+      f"2.{geroy[1]}\n"
+      f"3.{geroy[2]}\n")
 print("Для выхода напишите \"Выход\"")
 
 while (game_over != False):
-    my_geroin = input("Выберите своего героя: \n").lower()
-    match my_geroin:
+    my_geroy = input("Выберите своего героя: \n").lower()
+    match my_geroy:
         case "1":
             print("Настюха - подросток, который любит люто напаснуть курику\n"
                   "\t Лет: 17 лет\n"
